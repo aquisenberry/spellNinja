@@ -25,6 +25,25 @@ function centerText(context, text, offsetX, offsetY) {
 
 game.scenes.add("title", new Splat.Scene(canvas, function() {
 	// initialization
+
+}, function() {
+	// simulation
+
+	 if(game.mouse.consumePressed("0") ){
+        game.scenes.switchTo("main");
+    }
+}, function(context) {
+	// draw
+	context.fillStyle = "#092227";
+	context.fillRect(0, 0, canvas.width, canvas.height);
+
+	context.fillStyle = "#fff";
+	context.font = "25px helvetica";
+	centerText(context, "Spell Ninja", 0, canvas.height / 2 - 13);
+}));
+
+game.scenes.add("main", new Splat.Scene(canvas, function() {
+	// initialization
 }, function() {
 	// simulation
 }, function(context) {
@@ -34,7 +53,6 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 
 	context.fillStyle = "#fff";
 	context.font = "25px helvetica";
-	centerText(context, "Blank SplatJS Project", 0, canvas.height / 2 - 13);
+	centerText(context, "This is the game", 0, canvas.height / 2 - 13);
 }));
-
 game.scenes.switchTo("loading");
