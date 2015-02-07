@@ -83,17 +83,31 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 	var titleImage = game.images.get("spellninja-title");
 	var wordListBtnImage = game.images.get("wordlist-btn");
 
+	this.buttons = [];
+
+	this.buttons.push( new Splat.Button(game.mouse,canvas.width/2 - playBtnImage.width/2,220 + canvas.height/2 - playBtnImage.height/2, { normal: playBtnImage, pressed: playBtnImage }, function(state) {
+		if (state === "pressed"){
+			game.scenes.switchTo("main");
+		}
+	}, function() {
+	}));
+	this.buttons.push( new Splat.Button(game.mouse,canvas.width/2 - wordListBtnImage.width/2,400 + canvas.height/2 - wordListBtnImage.height/2, { normal: wordListBtnImage, pressed: wordListBtnImage }, function(state) {
+		if (state === "pressed") {
+			game.scenes.switchTo("wordList");
+		}
+	},function(){
+
+	}));
+
+
+
 	this.bg = new Splat.AnimatedEntity(0,0,bgImage.width,bgImage.height,bgImage,0,0);
-	this.play = new Splat.AnimatedEntity(canvas.width/2 - playBtnImage.width/2,220 + canvas.height/2 - playBtnImage.height/2,playBtnImage.width,playBtnImage.height,playBtnImage,0,0);
 	this.title = new Splat.AnimatedEntity(canvas.width/2 - titleImage.width/2,100,titleImage.width,titleImage.height,titleImage,0,0);
-	this.wordList = new Splat.AnimatedEntity(canvas.width/2 - wordListBtnImage.width/2,400 + canvas.height/2 - wordListBtnImage.height/2,wordListBtnImage.width,wordListBtnImage.height,wordListBtnImage,0,0);
-
-}, function() {
+}, function(elapsedMillis) {
 	// simulation
-
-	 if(game.mouse.consumePressed("0") ){
-        game.scenes.switchTo("main");
-    }
+	this.buttons.forEach(function(button) {
+		button.move(elapsedMillis);
+	});
 }, function(context) {
 	// draw
 
@@ -104,9 +118,10 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 	context.font = "25px helvetica";
 	centerText(context, "Spell Ninja", 0, canvas.height / 2 - 13);
 	this.bg.draw(context);
-	this.play.draw(context);
 	this.title.draw(context);
-	this.wordList.draw(context);
+	this.buttons.forEach(function(button){
+		button.draw(context);
+	});
 }));
 
 game.scenes.add("main", new Splat.Scene(canvas, function() {
@@ -150,5 +165,20 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	context.fillStyle = "#fff";
 	context.font = "25px helvetica";
 	centerText(context, "This is the game", 0, canvas.height / 2 - 13);
+}));
+game.scenes.add("wordList", new Splat.Scene(canvas, function() {
+	// initialization
+	
+}, function() {
+	// simulation
+	
+}, function(context) {
+	// draw
+	context.fillStyle = "#092227";
+	context.fillRect(0, 0, canvas.width, canvas.height);
+
+	context.fillStyle = "#fff";
+	context.font = "25px helvetica";
+	centerText(context, "This is the word list", 0, canvas.height / 2 - 13);
 }));
 game.scenes.switchTo("loading");
