@@ -26,6 +26,54 @@ function centerText(context, text, offsetX, offsetY) {
 	var y = offsetY | 0;
 	context.fillText(text, x, y);
 }
+function spawnAnimatedEntity(game,array, posX, posY, vx, vy, sprite, offsetX, offsetY){
+	var x = 0;
+	var y = 0;
+	var vX = 0;
+	var vY = 0;
+	var mysprite;
+	var h;
+	var w;
+	if (!game){
+		console.error("no game context given");
+		return false;
+	}else{
+		mysprite =game.images.get("spellninja-title");
+		h = mysprite.height;
+		w = mysprite.width;
+	}
+	if(!array){
+		console.error("Object not given an array to push to");
+		return false;
+	}
+	if(posX){
+		x = posX;
+	}
+	if (posY){
+		y = posY;
+	}
+	if(vx){
+		vX = vx;
+	}
+	if(vy){
+		vY = vy;
+	}
+	if(sprite){
+		mysprite = sprite;
+		h = mysprite.height;
+		w = mysprite.width;
+	}
+	if (!offsetX){
+		offsetX = 0;
+	}
+	if(!offsetY){
+		offsetY = 0;
+	}
+    var obj = new Splat.AnimatedEntity(x,y,w,h,mysprite,offsetX,offsetY);
+    obj.vx = vX;
+    obj.vy = vY;
+    array.push(obj);
+}
 /*function applyPhysics(object, blocks,time){
 	var gravityAccel = 0.003;
 	var jumpSpeed = -0.04;
@@ -126,10 +174,14 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 
 game.scenes.add("main", new Splat.Scene(canvas, function() {
 	// initialization
-	//this.items = [];
+	this.items = [];
+	spawnAnimatedEntity(game,this.items, 20, 20, 0, 0.003);
 	//this.itemSpawner = new ObjectSpawner(this, "cones", randomInterval, spawnCone);
-}, function() {
+}, function(elapsedMillis) {
 	// simulation
+	for(var i = 0; i< this.items.length; i++){
+        this.items[i].move(elapsedMillis);
+    }
 	/* for( var x = 0; x < this.obstacles.length; x++){
         if(this.obstacles[x] && this.obstacles[x].y > this.player.y + canvas.height * (1/8)){
             this.obstacles.splice(x,1);
@@ -165,6 +217,9 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	context.fillStyle = "#fff";
 	context.font = "25px helvetica";
 	centerText(context, "This is the game", 0, canvas.height / 2 - 13);
+	for(var i = 0; i< this.items.length; i++){
+        this.items[i].draw(context);
+    }
 }));
 game.scenes.add("wordList", new Splat.Scene(canvas, function() {
 	// initialization
