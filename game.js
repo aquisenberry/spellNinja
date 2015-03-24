@@ -3,12 +3,19 @@
 var Splat = require("splatjs");
 var canvas = document.getElementById("canvas");
 
+
+
 var manifest = {
 	"images": {
 		"title-bg": "images/lined-background.png",
 		"title-play-btn" : "images/play.png",
 		"spellninja-title": "images/spellninja-title.png",
-		"wordlist-btn": "images/wordlist.png"
+		"wordlist-btn": "images/wordlist.png",
+		"changewords-btn-pressed":"images/changewords-small-pressed.png",
+		"changewords-btn":"images/changewords.png",
+		"title-play-btn-pressed":"images/play-pressed.png",
+		"play-small-pressed":"images/play-small-pressed.png",
+		"wordlist-pressed":"images/wordlist-pressed.png"
 	},
 	"sounds": {
 	},
@@ -73,6 +80,10 @@ function spawnAnimatedEntity(game,array, posX, posY, vx, vy, sprite, offsetX, of
     obj.vx = vX;
     obj.vy = vY;
     array.push(obj);
+}
+function rand( lowest, highest){
+    var adjustedHigh = (highest - lowest) + 1;       
+    return Math.floor(Math.random()*adjustedHigh) + parseFloat(lowest);
 }
 /*function applyPhysics(object, blocks,time){
 	var gravityAccel = 0.003;
@@ -146,7 +157,8 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 	},function(){
 
 	}));
-
+	//TODO: load current wordlist from datasource
+	game.wordlist = [];
 
 
 	this.bg = new Splat.AnimatedEntity(0,0,bgImage.width,bgImage.height,bgImage,0,0);
@@ -174,13 +186,38 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 
 game.scenes.add("main", new Splat.Scene(canvas, function() {
 	// initialization
+	this.gravity = 0.002;
 	this.items = [];
-	spawnAnimatedEntity(game,this.items, 20, 20, 0, 0.003);
+	this.spawnpointY = canvas.height;
+	this.spanpointX = 0;
+	//spawnAnimatedEntity(game,this.items, 20, 20, 0, 0.2);
 	//this.itemSpawner = new ObjectSpawner(this, "cones", randomInterval, spawnCone);
 }, function(elapsedMillis) {
 	// simulation
+
+//=============================================================
+	//TODO: write phrsics function
+	//TODO: add word display to bottom of screen
+	//TODO: add collision for input and flying spites
+	//TODO: add letter pool to choose from
+	//TODO: add game logic
+	//TODO: add lives
+	//TODO: add letter sprites
+	//TODO: fine tune spawn generation variables
+	//TODO: create game timer
+//=============================================================
+	this.spawnpointX = rand(0,canvas.width);
+	if(rand(1,100) > 99){
+		var vxd = this.spawnpointX >canvas.width/2?  -1: 1; 
+		
+		spawnAnimatedEntity(game,this.items,this.spawnpointX,this.spawnpointY,vxd*rand(0,800)/1000,-1*rand(0,700)/1000);
+		console.log(this.items);
+	}
 	for(var i = 0; i< this.items.length; i++){
         this.items[i].move(elapsedMillis);
+        if(this.items[i].x < (0-this.items[i].width) || this.items[i].x > canvas.width || this.items[i].y < (0-this.items[i].height)){
+        	this.items.splice(i,1);
+        }
     }
 	/* for( var x = 0; x < this.obstacles.length; x++){
         if(this.obstacles[x] && this.obstacles[x].y > this.player.y + canvas.height * (1/8)){
@@ -216,24 +253,27 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 
 	context.fillStyle = "#fff";
 	context.font = "25px helvetica";
-	centerText(context, "This is the game", 0, canvas.height / 2 - 13);
+	//centerText(context, "This is the game", 0, canvas.height / 2 - 13);
 	for(var i = 0; i< this.items.length; i++){
         this.items[i].draw(context);
     }
 }));
 game.scenes.add("wordList", new Splat.Scene(canvas, function() {
 	// initialization
+	var input = new CanvasInput({
+	  canvas: document.getElementById("canvas")
+	});
 	
 }, function() {
 	// simulation
 	
 }, function(context) {
 	// draw
-	context.fillStyle = "#092227";
+	/*context.fillStyle = "#092227";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
 	context.fillStyle = "#fff";
 	context.font = "25px helvetica";
-	centerText(context, "This is the word list", 0, canvas.height / 2 - 13);
+	centerText(context, "This is the word list", 0, canvas.height / 2 - 13);*/
 }));
 game.scenes.switchTo("loading");
