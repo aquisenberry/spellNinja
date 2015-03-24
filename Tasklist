@@ -1,7 +1,7 @@
 1) creat object spawner (done)
 2) create physics parameters
-3) randomize multi object spawners
-4) randomize vx and vy for objects
+3) randomize multi object spawners (done)
+4) randomize vx and vy for objects (done)
 5) add swipe animation
 6) add collision detection on swipes
 7) add collision animation
