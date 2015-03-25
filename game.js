@@ -1,6 +1,7 @@
 "use strict";
 
 var Splat = require("splatjs");
+//var qunit = require("qunit");
 var canvas = document.getElementById("canvas");
 
 
@@ -79,13 +80,14 @@ function spawnAnimatedEntity(game,array, posX, posY, vx, vy, sprite, offsetX, of
     var obj = new Splat.AnimatedEntity(x,y,w,h,mysprite,offsetX,offsetY);
     obj.vx = vX;
     obj.vy = vY;
+    console.log(obj.vx,obj.vy)
     array.push(obj);
 }
 function rand( lowest, highest){
     var adjustedHigh = (highest - lowest) + 1;       
     return Math.floor(Math.random()*adjustedHigh) + parseFloat(lowest);
 }
-/*function applyPhysics(object, blocks,time){
+/*function applyPhysics(object,g, mvy){
 	var gravityAccel = 0.003;
 	var jumpSpeed = -0.04;
 	var moveForce = 0.03;
@@ -95,25 +97,11 @@ function rand( lowest, highest){
 	//var oldY = object.y
 	applyGravity(object,gravityAccel,frictionFactor,time);
 	moveObject(object,time);
-}
-function applyGravity(object, gravity,frictionFactor, time){
+}*/
+function applyGravity(object, gravity,time){
 	object.vy += gravity*time;
-	if(grounded){//is grounded
-		if (object.vx > 0.01){
-			//frictionFactor = frictionFactor*-1;
-			object.vx =  object.vx *frictionFactor;
-		}else if (object.vx < -0.01){
-			//frictionFactor = frictionFactor * 1;
-			object.vx =  object.vx *frictionFactor;
-		}else{
-			object.vx = 0;
-		}
-	}
-	else{
-		object.vx = object.vx*0.98 ;
-	}
 }
-function moveObject(object, time){
+/*function moveObject(object, time){
 	
 	object.move(time);
 }
@@ -186,7 +174,7 @@ game.scenes.add("title", new Splat.Scene(canvas, function() {
 
 game.scenes.add("main", new Splat.Scene(canvas, function() {
 	// initialization
-	this.gravity = 0.002;
+	this.gravity = 0.0003;
 	this.items = [];
 	this.spawnpointY = canvas.height;
 	this.spanpointX = 0;
@@ -207,15 +195,16 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	//TODO: create game timer
 //=============================================================
 	this.spawnpointX = rand(0,canvas.width);
-	if(rand(1,100) > 99){
+	if(rand(1,100) > 97){
 		var vxd = this.spawnpointX >canvas.width/2?  -1: 1; 
 		
-		spawnAnimatedEntity(game,this.items,this.spawnpointX,this.spawnpointY,vxd*rand(0,800)/1000,-1*rand(0,700)/1000);
+		spawnAnimatedEntity(game,this.items,this.spawnpointX,this.spawnpointY,vxd*rand(this.spawnpointX-canvas.width/2 ,canvas.width/2 -this.spawnpointX)/1000,-1*rand(6.5,7.8)/10);
 		console.log(this.items);
 	}
 	for(var i = 0; i< this.items.length; i++){
+		applyGravity(this.items[i],this.gravity,elapsedMillis);
         this.items[i].move(elapsedMillis);
-        if(this.items[i].x < (0-this.items[i].width) || this.items[i].x > canvas.width || this.items[i].y < (0-this.items[i].height)){
+        if(this.items[i].x < (0-this.items[i].width) || this.items[i].x > canvas.width || this.items[i].y < (0-this.items[i].height)|| this.items[i].y > (canvas.height)){
         	this.items.splice(i,1);
         }
     }
@@ -252,11 +241,13 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
 	context.fillStyle = "#fff";
-	context.font = "25px helvetica";
-	//centerText(context, "This is the game", 0, canvas.height / 2 - 13);
+	context.font = "50px helvetica";
+	
 	for(var i = 0; i< this.items.length; i++){
         this.items[i].draw(context);
     }
+
+    centerText(context, "word to spell", 0, canvas.height-25);
 }));
 game.scenes.add("wordList", new Splat.Scene(canvas, function() {
 	// initialization

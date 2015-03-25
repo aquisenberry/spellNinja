@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "browserify": "^4.1.8",
-    "jshint": "^2.5.1"
+    "jshint": "^2.5.1",
+    "qunitjs": "^1.17.1"
   },
   "scripts": {
     "lint-js": "bash -c \"jshint game.js\"",
