@@ -1,7 +1,7 @@
 {
-  "name": "blank-splatjs-project",
-  "version": "0.0.0",
-  "description": "Blank SplatJS Project",
+  "name": "Grammar-Ninja",
+  "version": "0.1.0",
+  "description": "Grammar ninja is the story of a robot on its way to become the greatest grammar ninja in the world. Its story begins at its humble beginnings learning to spell.",
   "main": "index.js",
   "private": true,
   "dependencies": {
@@ -10,14 +10,15 @@
   "devDependencies": {
     "browserify": "^4.1.8",
     "jshint": "^2.5.1",
-    "qunitjs": "^1.17.1"
+    "qunitjs": "^1.17.1",
+    "tabris": "0.9.3"
   },
   "scripts": {
     "lint-js": "bash -c \"jshint game.js\"",
     "build-js": "browserify game.js -o index.js",
     "build": "npm run lint-js && npm run build-js"
   },
-  "author": "Eric Lathrop <eric@ericlathrop.com> (http://ericlathrop.com)",
+  "author": "Anthony Quisenberry <anthony.quisenberry01@gmail.com> (http://anthonyquisenberry.com)",
   "license": "MIT",
   "jshintConfig": {
     "camelcase": true,

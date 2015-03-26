@@ -1,10 +1,18 @@
 "use strict";
 
 var Splat = require("splatjs");
+var Tabris = require("tabris");
 //var qunit = require("qunit");
 var canvas = document.getElementById("canvas");
 
+var page = tabris.create("Page", {
+  title: "Hello, World!",
+  topLevel: true
+});
 
+var canvas = tabris.create("Canvas", {
+  layoutData: {left: 10, top: 10, right: 10, bottom: 10}
+}).appendTo(page);
 
 var manifest = {
 	"images": {
@@ -103,7 +111,6 @@ function applyGravity(object, gravity,time){
 function slice(obj, mouse){
 	for(var i =0;i < obj.length; i++){
 		if (mouse.x <= obj[i].x+obj[i].width && mouse.x >= obj[i].x && mouse.y <= obj[i].y + obj[i].height && mouse.y >= obj[i].y){
-			console.log(mouse,obj[i]);
 			//TODO: add destruction animation
 			obj.splice(i,1);
 			i--;
@@ -193,7 +200,6 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	// simulation
 
 //=============================================================
-	//TODO: add collision for input and flying spites
 	//TODO: add letter pool to choose from
 	//TODO: add game logic
 	//TODO: add lives
