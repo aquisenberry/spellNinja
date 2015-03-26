@@ -80,7 +80,6 @@ function spawnAnimatedEntity(game,array, posX, posY, vx, vy, sprite, offsetX, of
     var obj = new Splat.AnimatedEntity(x,y,w,h,mysprite,offsetX,offsetY);
     obj.vx = vX;
     obj.vy = vY;
-    console.log(obj.vx,obj.vy)
     array.push(obj);
 }
 function rand( lowest, highest){
@@ -100,6 +99,16 @@ function rand( lowest, highest){
 }*/
 function applyGravity(object, gravity,time){
 	object.vy += gravity*time;
+}
+function slice(obj, mouse){
+	for(var i =0;i < obj.length; i++){
+		if (mouse.x <= obj[i].x+obj[i].width && mouse.x >= obj[i].x && mouse.y <= obj[i].y + obj[i].height && mouse.y >= obj[i].y){
+			console.log(mouse,obj[i]);
+			//TODO: add destruction animation
+			obj.splice(i,1);
+			i--;
+		}
+	}
 }
 /*function moveObject(object, time){
 	
@@ -184,8 +193,6 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	// simulation
 
 //=============================================================
-	//TODO: write phrsics function
-	//TODO: add word display to bottom of screen
 	//TODO: add collision for input and flying spites
 	//TODO: add letter pool to choose from
 	//TODO: add game logic
@@ -193,13 +200,18 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	//TODO: add letter sprites
 	//TODO: fine tune spawn generation variables
 	//TODO: create game timer
+	//TODO: fine tune physics
+	//TODO: fine tune word display at bottom
+	//TODO: Add word load functionality
 //=============================================================
 	this.spawnpointX = rand(0,canvas.width);
 	if(rand(1,100) > 97){
 		var vxd = this.spawnpointX >canvas.width/2?  -1: 1; 
 		
 		spawnAnimatedEntity(game,this.items,this.spawnpointX,this.spawnpointY,vxd*rand(this.spawnpointX-canvas.width/2 ,canvas.width/2 -this.spawnpointX)/1000,-1*rand(6.5,7.8)/10);
-		console.log(this.items);
+	}
+	if (game.mouse.isPressed(0)){
+		slice(this.items,game.mouse);
 	}
 	for(var i = 0; i< this.items.length; i++){
 		applyGravity(this.items[i],this.gravity,elapsedMillis);
@@ -246,8 +258,14 @@ game.scenes.add("main", new Splat.Scene(canvas, function() {
 	for(var i = 0; i< this.items.length; i++){
         this.items[i].draw(context);
     }
-
+    context.fillStyle = "#000000";
+    context.fillRect(0, canvas.height-100, canvas.width,100);
+    context.fillStyle = "#ffffff";
+    //TODO: replace with loaded word
     centerText(context, "word to spell", 0, canvas.height-25);
+    //TODO: replace with timer variable
+    context.fillText("00:00",5,50)
+
 }));
 game.scenes.add("wordList", new Splat.Scene(canvas, function() {
 	// initialization
